@@ -11,7 +11,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 //Handling CORS
-
 app.use((req,res,next) => {
     res.header('Access-Control-Allow-Origin','*')
     res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Authorization')
@@ -22,8 +21,11 @@ app.use((req,res,next) => {
     next()
 })
 
-app.use('/user',userRouter)
 
+// user ROUTE
+
+
+app.use('/user',userRouter)
 
 //404 Not Found
 app.use((req, res, next)=>{
@@ -31,7 +33,6 @@ app.use((req, res, next)=>{
     err.status = 404;
     next(err)
 })
-
 
 //Error Handling
 app.use((err, req, res, next)=>{

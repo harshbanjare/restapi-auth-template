@@ -1,5 +1,4 @@
 import express from "express";
-import bcrypt from 'bcrypt';
 import db from '../firebase.js'
 import create from './user/create.js'
 import login from './user/login.js'
@@ -7,12 +6,12 @@ import login from './user/login.js'
 const router = express.Router();
 
 router.get("/",async (req, res, next)=>{
-    res.status(200).json({response:"ok"})
+    res.status(200).json({response:"ok"});
 })
 
-router.post("/create",create)
+router.post("/create",create);
 
-router.post("/login",login)
+router.post("/login",login);
 
 
 export default router;
