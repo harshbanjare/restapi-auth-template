@@ -1,11 +1,12 @@
 import express from "express";
-import db from '../firebase.js'
+
 import create from './user/create.js'
 import login from './user/login.js'
+import checkAuth from "../middleware/check-auth.js";
 
 const router = express.Router();
 
-router.get("/",async (req, res, next)=>{
+router.get("/", checkAuth, async (req, res, )=>{
     res.status(200).json({response:"ok"});
 })
 

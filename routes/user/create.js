@@ -83,8 +83,6 @@ export default async (req,res,next) =>{
         pfp : body.pfp
     }
 
-
-
     try{
         await users_ref.doc().set(user);
     }  catch (e){
