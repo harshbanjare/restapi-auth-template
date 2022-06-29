@@ -12,7 +12,6 @@ export default async (req, res, next) => {
         req.body.userData = await jwt.verify(token, process.env.JWT_SECRET_KEY);
         next()
     }catch (e){
-        console.log(e)
         res.status(401).json({
             message: 'unauthorized'
         })
