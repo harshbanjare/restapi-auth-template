@@ -1,5 +1,4 @@
 import express from "express";
-
 import create from './user/create.js'
 import login from './user/login.js'
 import checkAuth from "../middleware/check-auth.js";
@@ -7,7 +6,7 @@ import checkAuth from "../middleware/check-auth.js";
 const router = express.Router();
 
 router.get("/", checkAuth, async (req, res, next)=>{
-    res.status(200).json({response:"ok"});
+    res.status(200).json({response:"ok",...req.body.userData});
 })
 
 router.post("/create",create);
