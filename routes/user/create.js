@@ -86,7 +86,6 @@ export default async (req,res,next) =>{
 
 
     try{
-        console.log(user);
         await users_ref.doc().set(user);
     }  catch (e){
         const err = new Error(e);

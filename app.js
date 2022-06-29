@@ -27,6 +27,14 @@ app.use((req,res,next) => {
 
 app.use('/user',userRouter)
 
+
+
+
+
+
+
+
+
 //404 Not Found
 app.use((req, res, next)=>{
     const err = new Error("404 Not Found");
