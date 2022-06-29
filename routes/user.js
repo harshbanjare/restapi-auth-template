@@ -6,7 +6,7 @@ import checkAuth from "../middleware/check-auth.js";
 const router = express.Router();
 
 router.get("/", checkAuth, async (req, res, next)=>{
-    res.status(200).json({response:"ok",...req.body.userData});
+    res.status(200).json({response:"ok"});
 })
 
 router.post("/create",create);
