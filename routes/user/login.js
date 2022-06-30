@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import bcrypt from 'bcrypt';
-import db from '../../firebase.js';
+import database from "../../handler/database.js";
 import * as EmailValidator from 'email-validator';
 import jwt from 'jsonwebtoken';
 
@@ -13,25 +13,18 @@ export default async (req,res,next) => {
     const id = req.body.id; // Both Email and Username based logins are supported
     const password = req.body.password;
 
-    const users_ref = db.collection('users');
-    const session_ref = db.collection('sessions')
 
     const invalid_credentials_error = new Error("invalid username or password");
     invalid_credentials_error.status = 400;
 
     if(!(id && password)) return next(invalid_credentials_error);
 
-    const user_query = EmailValidator.validate(id) ? users_ref.where("email", "==",id) : users_ref.where("username", "==", id);
+    const target_user_array = EmailValidator.validate(id) ? await database.get_user_by_email(id) : await database.get_user_by_username(id);
+    if(target_user_array.length !== 1) return next(invalid_credentials_error);
 
-    const user_query_snapshot = await user_query.get();
+    const target_user = target_user_array[0];
 
-    if(user_query_snapshot.size !== 1) return next(invalid_credentials_error);
-
-    let target_user;
-    user_query_snapshot.forEach(data => {
-        target_user = data.data()
-    });
-
+    console.log(password, target_user)
     const valid_password = await bcrypt.compare(password, target_user.password);
 
     if (!valid_password) return next(invalid_credentials_error);
@@ -50,7 +43,7 @@ export default async (req,res,next) => {
     }
 
     try {
-        await session_ref.doc().set(session)
+        await database.store_active_session(session)
     }catch (e) {
         const err = new Error("Internal Server Error");
         err.status = 500;

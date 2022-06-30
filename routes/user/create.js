@@ -1,13 +1,13 @@
-import db from '../../firebase.js'
+
 import * as EmailValidator from 'email-validator';
 import bcrypt from "bcrypt";
-
+import database from "../../handler/database.js";
 
 // POST /user/create
 
 export default async (req,res,next) =>{
     const body = req.body;
-    const users_ref = db.collection('users');
+
 
     //placeholder profile picture
     body.pfp = body.pfp || process.env.PLACEHOLDER_PROFILE_PIC;
@@ -37,10 +37,10 @@ export default async (req,res,next) =>{
         err.status = 400;
         return next(err)
     }
-    const email_existing_query_ref = users_ref.where("email","==", body.email);
-    const email_existing_query_snapshot = await email_existing_query_ref.get();
 
-    if(!email_existing_query_snapshot.empty){
+    const email_check = await database.get_user_by_email(body.email);
+
+    if(email_check.length > 0){
         const err = new Error("Email Already In Use");
         err.status = 400;
         return next(err)
@@ -62,9 +62,8 @@ export default async (req,res,next) =>{
         return next(err)
     }
 
-    const username_existing_query_ref = users_ref.where("username","==", username)
-    const username_existing_query_snapshot = await username_existing_query_ref.get()
-    if(!username_existing_query_snapshot.empty){
+    const username_check = await database.get_user_by_username(username);
+    if(username_check.length > 0){
         const err = new Error("Username taken");
         err.status = 400;
         return next(err)
@@ -84,7 +83,8 @@ export default async (req,res,next) =>{
     }
 
     try{
-        await users_ref.doc().set(user);
+        const result = await database.create_user(user);
+        console.log(result)
     }  catch (e){
         const err = new Error(e);
         err.status = 500;

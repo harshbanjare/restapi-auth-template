@@ -1,17 +1,10 @@
-import db from "../../firebase.js";
+import database from "../../handler/database.js";
 
-export default async (req,res,next) =>{
+export default async (req,res,next) => {
     const token = req.headers.authorization.split(" ")[1];
 
     try{
-        const query = db.collection('sessions').where("token","==", token);
-        const query_snapshot = await query.get();
-        let document_id;
-        query_snapshot.forEach(data => {
-            document_id = data.id
-        })
-        await db.collection("sessions").doc(document_id).delete();
-
+        await database.delete_active_session(token)
     }catch (e){
         const err = new Error(e.message)
         err.status = 500

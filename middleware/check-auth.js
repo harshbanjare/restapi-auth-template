@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
-import db from "../firebase.js";
+import db from "../handler/database/firebase/firebase.js";
 export default async (req, res, next) => {
     try{
         const token = req.headers.authorization.split(" ")[1];
