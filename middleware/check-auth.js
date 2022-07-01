@@ -1,13 +1,14 @@
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
-import db from "../handler/database/firebase/firebase.js";
+import database from "../handler/database.js";
 export default async (req, res, next) => {
     try{
         const token = req.headers.authorization.split(" ")[1];
 
-        const session_query_snapshot = await db.collection("sessions").where("token", "==", token).get();
+        const session_query_snapshot = await database.get_active_session(token);
 
-        if (session_query_snapshot.size !== 1) throw "Invalid Session";
+        console.log(session_query_snapshot)
+        if (session_query_snapshot.length !== 1) throw "Invalid Session";
 
         req.body.userData = await jwt.verify(token, process.env.JWT_SECRET_KEY);
         next()

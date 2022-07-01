@@ -3,18 +3,18 @@ import {getFirestore} from 'firebase-admin/firestore';
 
 import serviceAccount from './serviceAccount.js';
 
-initializeApp({
-    credential: cert(serviceAccount)
-});
 
-const db = getFirestore();
 
 export default class Database {
 
-    constructor() {
-        this.database = "firebase";
-        this.users = db.collection("users");
-        this.sessions = db.collection("sessions")
+     constructor() {
+        this.database_name = "firebase";
+
+        initializeApp({credential: cert(serviceAccount)});
+
+        this.db = getFirestore();
+        this.users = this.db.collection("users");
+        this.sessions = this.db.collection("sessions")
 
     }
     /**
@@ -96,9 +96,9 @@ export default class Database {
     async get_active_session(token){
         const query = this.sessions.where("token","==", token);
         const query_snapshot = await query.get();
-        let document_id = {};
+        let document_id = [];
         query_snapshot.forEach(data => {
-            document_id = {id: data.id, ...data.data()}
+            document_id.push({id: data.id, ...data.data()})
         })
         return document_id;
     }
