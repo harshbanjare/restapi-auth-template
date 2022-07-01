@@ -1,2 +1,2 @@
 # restapi-auth-template
-A simple user authentication template for nodejs REST API using JWT and Firestore
+A simple REST API template for implementing user authentication using JWT.
