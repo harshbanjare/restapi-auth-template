@@ -1,10 +1,10 @@
-import database from "../../handler/database.js";
+import {database} from "../../handler/database.js";
 
-export default async (req,res,next) => {
+export default async (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
-    try{
+    try {
         await database.delete_active_session(token)
-    }catch (e){
+    } catch (e) {
         const err = new Error(e.message)
         err.status = 500
         return next(err)

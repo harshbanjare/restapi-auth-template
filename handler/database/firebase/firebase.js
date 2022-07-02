@@ -4,30 +4,27 @@ import {getFirestore} from 'firebase-admin/firestore';
 import serviceAccount from './serviceAccount.js';
 
 
-
 export default class Database {
 
-     constructor() {
-        this.database_name = "firebase";
-
+    constructor() {
+        console.log("Database: Firebase");
         initializeApp({credential: cert(serviceAccount)});
-
         this.db = getFirestore();
         this.users = this.db.collection("users");
         this.sessions = this.db.collection("sessions")
-
     }
+
     /**
      * Creates a new user in the database.
      * @method
-     * @param {Object} user_object - The user object which contains username, email and password by default.
+     * @param {Object} user_object - The user object which contains username, email, password and pfp by default.
      * @return {WriteResult}
      * **/
 
     async create_user(user_object) {
         try {
-             return await this.users.doc().set(user_object);
-        }catch (e) {
+            return await this.users.doc().set(user_object);
+        } catch (e) {
             throw e;
         }
 
@@ -39,9 +36,9 @@ export default class Database {
      * @param {String} username - The username of the user.
      * @return {Promise} - Resolves to an array with the user as the only element.
      * **/
-    async get_user_by_username(username){
+    async get_user_by_username(username) {
 
-        const user_retrieval_query = this.users.where("username","==", username)
+        const user_retrieval_query = this.users.where("username", "==", username)
         const user_retrieval_query_snapshot = await user_retrieval_query.get()
 
         let user = [];
@@ -59,9 +56,9 @@ export default class Database {
      * @param {String} email - The email of the user.
      * @return {Promise} - Resolves to an array with the user as the only element.
      * **/
-    async get_user_by_email(email){
+    async get_user_by_email(email) {
 
-        const user_retrieval_query = this.users.where("email","==", email)
+        const user_retrieval_query = this.users.where("email", "==", email)
         const user_retrieval_query_snapshot = await user_retrieval_query.get()
 
         let user = [];
@@ -80,10 +77,10 @@ export default class Database {
      * @return {WriteResult}
      * **/
 
-    async store_active_session(session){
+    async store_active_session(session) {
         try {
             return await this.sessions.doc().set(session);
-        }catch (e) {
+        } catch (e) {
             throw e;
         }
     }
@@ -93,8 +90,8 @@ export default class Database {
      * @param {String} token - The JWT token.
      * @return {Promise}  - Resolves to an array containing the session object.
      * **/
-    async get_active_session(token){
-        const query = this.sessions.where("token","==", token);
+    async get_active_session(token) {
+        const query = this.sessions.where("token", "==", token);
         const query_snapshot = await query.get();
         let document_id = [];
         query_snapshot.forEach(data => {
@@ -108,11 +105,11 @@ export default class Database {
      * @param {String} token - The JWT token.
      * @return {Promise} - A Promise resolved with the write time of this delete operation.
      * **/
-    async delete_active_session(token){
-        try{
+    async delete_active_session(token) {
+        try {
             const session = await this.get_active_session(token);
             return await this.sessions.doc(session.id).delete();
-        }catch (e) {
+        } catch (e) {
             throw e;
         }
     }

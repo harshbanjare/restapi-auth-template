@@ -1,8 +1,9 @@
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
-import database from "../handler/database.js";
+import {database} from "../handler/database.js";
+
 export default async (req, res, next) => {
-    try{
+    try {
         const token = req.headers.authorization.split(" ")[1];
 
         const session_query_snapshot = await database.get_active_session(token);
@@ -12,7 +13,7 @@ export default async (req, res, next) => {
 
         req.body.userData = await jwt.verify(token, process.env.JWT_SECRET_KEY);
         next()
-    }catch (e){
+    } catch (e) {
         res.status(401).json({
             message: 'unauthorized'
         })

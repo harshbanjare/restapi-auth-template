@@ -6,14 +6,14 @@ import logout from "./user/logout.js";
 
 const router = express.Router();
 
-router.get("/", checkAuth, async (req, res, next)=>{
-    res.status(200).json({response:"ok"});
+router.get("/", checkAuth, async (req, res, next) => {
+    res.status(200).json({response: "ok"});
 })
 
-router.post("/create",create);
+router.post("/create", create);
 
-router.post("/login",login);
+router.post("/login", login);
 
-router.post("/logout",checkAuth, logout)
+router.post("/logout", checkAuth, logout)
 
 export default router;

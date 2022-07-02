@@ -1,5 +1,16 @@
-import Database from './database/firebase/firebase.js';
+import 'dotenv/config';
 
-const database = new Database();
+export let database;
 
-export default database;
+if (process.env.DEFAULT_DATABASE === "sqlite") {
+    import("./database/sqlite/sqlite.js").then(module => {
+        database = new module.default();
+
+    });
+} else if (process.env.DATABASE_TYPE === "firebase") {
+    import("./database/firebase/firebase.js").then(module => {
+        database = new module.default();
+    });
+}
+
+

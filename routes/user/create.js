@@ -1,13 +1,13 @@
-
+import "dotenv/config";
 import * as EmailValidator from 'email-validator';
 import bcrypt from "bcrypt";
-import database from "../../handler/database.js";
+import {database} from "../../handler/database.js";
 
 // POST /user/create
 
 export default async (req,res,next) =>{
     const body = req.body;
-
+    console.log("req body",body)
 
     //placeholder profile picture
     body.pfp = body.pfp || process.env.PLACEHOLDER_PROFILE_PIC;
@@ -20,16 +20,7 @@ export default async (req,res,next) =>{
         return next(error)
     }
 
-    bcrypt.hash(body.password, 10, function(err, hash) {
-        if (err){
-            const error = new Error(err);
-            error.status = 500;
-            return next(error)
-        }
-        body.hashed_password = hash;
-    });
-
-
+    body.hashed_password = await bcrypt.hash(body.password, 10);
 
     //email validator
     if (!EmailValidator.validate(body.email)){
@@ -81,8 +72,8 @@ export default async (req,res,next) =>{
         email: body.email,
         pfp : body.pfp
     }
-
     try{
+        console.log(user);
         const result = await database.create_user(user);
         console.log(result)
     }  catch (e){
