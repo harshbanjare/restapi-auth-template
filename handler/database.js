@@ -7,7 +7,7 @@ if (process.env.DEFAULT_DATABASE === "sqlite") {
         database = new module.default();
 
     });
-} else if (process.env.DATABASE_TYPE === "firebase") {
+} else if (process.env.DEFAULT_DATABASE === "firebase") {
     import("./database/firebase/firebase.js").then(module => {
         database = new module.default();
     });
