@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 export let database;
 
-if (process.env.DEFAULT_DATABASE === "sqlite") {
+if (process.env.DEFAULT_DATABASE === "sqlite3") {
     import("./database/sqlite/sqlite.js").then(module => {
         database = new module.default();
 

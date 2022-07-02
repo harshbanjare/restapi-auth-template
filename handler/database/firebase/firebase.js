@@ -6,6 +6,11 @@ import serviceAccount from './serviceAccount.js';
 
 export default class Database {
 
+    /**
+     * Initializes the database.
+     * @constructor
+     */
+
     constructor() {
         console.log("Database: Firebase");
         initializeApp({credential: cert(serviceAccount)});
@@ -108,8 +113,9 @@ export default class Database {
     async delete_active_session(token) {
         try {
             const session = await this.get_active_session(token);
-            return await this.sessions.doc(session.id).delete();
+            return await this.sessions.doc(String(session[0].id)).delete();
         } catch (e) {
+            console.log(e)
             throw e;
         }
     }
